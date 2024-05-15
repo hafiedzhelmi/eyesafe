@@ -1,0 +1,40 @@
+{
+  "manifest_version": 3,
+  "name": "Sensitive Content Filter",
+  "version": "1.0",
+  "description": "A browser extension to filter sensitive content based on user-defined sensitivity levels.",
+  "permissions": ["activeTab", "storage", "scripting"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "icon48.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["tf.es2017.js", "contentScript.js"]
+    }
+  ],
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "model/model.json",
+        "model/group1-shard1of4.bin",
+        "model/group1-shard2of4.bin",
+        "model/group1-shard3of4.bin",
+        "model/group1-shard4of4.bin"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

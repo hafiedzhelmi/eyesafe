@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Filter Settings</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 10px;
+      }
+      label {
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Content Filter Settings</h1>
+    <label for="sensitivity">Sensitivity Level:</label>
+    <select id="sensitivity">
+      <option value="1">Level 1 - Explicit Nudity</option>
+      <option value="2">Level 2 - Full Nudity</option>
+      <option value="3">Level 3 - Partial Nudity</option>
+      <option value="4">Level 4 - Implied Nudity</option>
+      <option value="5">Level 5 - Minimal Nudity</option>
+    </select>
+    <br />
+    <label for="filter-toggle">Enable Content Filter:</label>
+    <input type="checkbox" id="filter-toggle" />
+    <br />
+    <button id="save">Save Settings</button>
+    <script src="popup.js"></script>
+  </body>
+</html>
