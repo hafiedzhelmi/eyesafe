@@ -57,8 +57,8 @@ def search_images(query, api_key, cse_id, save_folder, num_images=50):
             break
 
 # Main code
-API_KEY = 'AIzaSyBdbanHZyXzf_8qy5tDm1f_A8so5BQRpSs'
-CSE_ID = '4097f06a0126047d8'
+API_KEY = 'put your own key'
+CSE_ID = 'put your own id'
 
 search_images('men smart casual', API_KEY, CSE_ID, 'D:\\google\\level5man', num_images=300)
 search_images('full dressed woman', API_KEY, CSE_ID, 'D:\\google\\level5woman', num_images=300)
