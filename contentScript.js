@@ -2,9 +2,38 @@ let model;
 let sensitivityLevel = 5; // Default sensitivity level, least restrictive
 let filterEnabled = true;
 
+// Define the category levels and class names
+const categoryLevels = {
+  bottom: 2,
+  men_full_dressed: 5,
+  men_half_naked: 4,
+  men_penis: 1,
+  men_undies: 3,
+  women_breasts: 2,
+  women_full_dressed: 5,
+  women_short_dressed: 4,
+  women_undies: 3,
+  women_vagina: 1,
+};
+
+const class_names = [
+  "bottom",
+  "men_full_dressed",
+  "men_half_naked",
+  "men_penis",
+  "men_undies",
+  "women_breasts",
+  "women_full_dressed",
+  "women_short_dressed",
+  "women_undies",
+  "women_vagina",
+];
+
 async function loadModel() {
   try {
-    model = await tf.loadLayersModel(chrome.runtime.getURL("model/model.json"));
+    model = await tf.loadLayersModel(
+      chrome.runtime.getURL("model2/model.json")
+    );
     console.log("Model loaded successfully");
     if (model) {
       processImages(); // Ensure model is loaded before processing images
@@ -28,16 +57,29 @@ async function fetchSettings() {
   });
 }
 
-// Debounce function to limit processImages invocations
-function debounce(fn, delay) {
-  let timeout;
-  return (...args) => {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => fn(...args), delay);
+// Throttle function to limit processImages invocations
+function throttle(fn, wait) {
+  let inThrottle, lastFn, lastTime;
+  return function () {
+    const context = this;
+    const args = arguments;
+    if (!inThrottle) {
+      fn.apply(context, args);
+      lastTime = Date.now();
+      inThrottle = true;
+    } else {
+      clearTimeout(lastFn);
+      lastFn = setTimeout(function () {
+        if (Date.now() - lastTime >= wait) {
+          fn.apply(context, args);
+          lastTime = Date.now();
+        }
+      }, Math.max(wait - (Date.now() - lastTime), 0));
+    }
   };
 }
 
-const debounceProcessImages = debounce(async () => {
+const throttleProcessImages = throttle(async () => {
   await fetchSettings();
   if (!filterEnabled) {
     console.log("Content filter is disabled.");
@@ -51,7 +93,7 @@ const debounceProcessImages = debounce(async () => {
       markAndProcessImage(img);
     }
   });
-}, 300);
+}, 100);
 
 function markAndProcessImage(img) {
   img.classList.add("processed");
@@ -80,15 +122,22 @@ async function analyzeAndBlur(img) {
     let predictions;
     try {
       predictions = await model.predict(resized);
-      const results = predictions.arraySync(); // Convert tensor data to regular array
+      const results = predictions.arraySync()[0]; // Convert tensor data to regular array
       const highestPredictionIndex = predictions.argMax(1).dataSync()[0];
+      const highestConfidence = results[highestPredictionIndex];
       console.log("Predictions received for image:", img.src, results);
 
-      const shouldBlur = determineIfSensitive(highestPredictionIndex);
-      console.log("The level of this image is:", highestPredictionIndex + 1);
+      const shouldBlur = determineIfSensitive(
+        highestPredictionIndex,
+        highestConfidence
+      );
+      console.log(
+        "The level of this image is:",
+        categoryLevels[class_names[highestPredictionIndex]]
+      );
       console.log("Should the image be blurred? ", shouldBlur);
       if (shouldBlur) {
-        img.style.filter = "blur(8px)";
+        img.style.filter = "blur(20px)";
         console.log("Applied blur to image:", img.src);
       }
     } catch (error) {
@@ -107,8 +156,10 @@ async function analyzeAndBlur(img) {
   }
 }
 
-function determineIfSensitive(predictedIndex) {
-  return predictedIndex + 1 <= sensitivityLevel;
+function determineIfSensitive(predictedIndex, highestConfidence) {
+  const category = class_names[predictedIndex];
+  const level = categoryLevels[category];
+  return highestConfidence >= 0.3 && level <= sensitivityLevel;
 }
 
 // Load the model after defining necessary functions
@@ -121,7 +172,7 @@ const observer = new MutationObserver((mutations) => {
       (mutation.type === "childList" && mutation.addedNodes.length) ||
       mutation.type === "attributes"
     ) {
-      debounceProcessImages();
+      throttleProcessImages();
     }
   });
 });
@@ -147,5 +198,5 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
   }
 
   // Re-process images if filtering is enabled
-  debounceProcessImages();
+  throttleProcessImages();
 });

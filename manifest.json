@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Sensitive Content Filter",
+  "name": "Sexual Content Image Filter",
   "version": "1.0",
   "description": "A browser extension to filter sensitive content based on user-defined sensitivity levels.",
   "permissions": ["activeTab", "storage", "scripting"],
@@ -28,11 +28,13 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "model/model.json",
-        "model/group1-shard1of4.bin",
-        "model/group1-shard2of4.bin",
-        "model/group1-shard3of4.bin",
-        "model/group1-shard4of4.bin"
+        "model2/model.json",
+        "model2/group1-shard1of4.bin",
+        "model2/group1-shard2of4.bin",
+        "model2/group1-shard3of4.bin",
+        "model2/group1-shard4of4.bin",
+        "logo.png",
+        "logo2.png"
       ],
       "matches": ["<all_urls>"]
     }

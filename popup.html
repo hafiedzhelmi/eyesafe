@@ -5,29 +5,205 @@
     <title>Filter Settings</title>
     <style>
       body {
-        font-family: Arial, sans-serif;
-        margin: 10px;
+        font-family: "Comic Sans MS", "Comic Sans", cursive;
+        background-color: #8c9eff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+      .container {
+        background-color: #000;
+        color: #fff;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        width: 300px;
+        height: 340px;
+      }
+      .title {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
+      .title img {
+        width: 30px; /* Adjust the size of the logo as needed */
+        height: 30px;
+      }
+      .status {
+        margin-bottom: 20px;
+      }
+      .status span {
+        display: block;
+        margin: 10px 0;
+      }
+      .button {
+        background-color: #000;
+        border: 1px solid #fff;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 15px;
+        cursor: pointer;
+        font-size: 14px;
+        text-transform: uppercase;
+        transition: background-color 0.3s ease;
+        margin-top: 10px;
+      }
+      .button:hover {
+        background-color: #fff;
+        color: #000;
+      }
+      .toggle-button {
+        background-color: #000;
+        border: none;
+        color: #fff;
+        font-size: 24px;
+        cursor: pointer;
+        border-radius: 50%;
+        padding: 10px;
+        width: 50px;
+        height: 50px;
+        transition: background-color 0.3s ease;
+      }
+      .toggle-button:hover {
+        background-color: #fff;
+        color: #000;
+      }
+      select {
+        margin: 10px 0;
+        padding: 5px;
+        border: 1px solid #fff;
+        border-radius: 5px;
+        background-color: #000;
+        color: #fff;
+        font-size: 14px;
+      }
+      .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 42px;
+        height: 23.8px;
+      }
+      .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: 0.4s;
+        border-radius: 23.8px;
+      }
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 18.2px;
+        width: 18.2px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: 0.4s;
+        border-radius: 50%;
+      }
+      input:checked + .slider {
+        background-color: #8c9eff;
+      }
+      input:checked + .slider:before {
+        transform: translateX(18.2px);
       }
       label {
+        display: block;
         margin-top: 10px;
+        font-size: 14px;
+      }
+      .link {
+        color: #8c9eff;
+        text-decoration: underline;
+        cursor: pointer;
+      }
+      .hidden {
+        display: none;
+      }
+      .guide-container p {
+        text-align: justify;
+      }
+      .guide-container table td:nth-child(2) {
+        text-align: left;
       }
     </style>
   </head>
   <body>
-    <h1>Content Filter Settings</h1>
-    <label for="sensitivity">Sensitivity Level:</label>
-    <select id="sensitivity">
-      <option value="1">Level 1 - Explicit Nudity</option>
-      <option value="2">Level 2 - Full Nudity</option>
-      <option value="3">Level 3 - Partial Nudity</option>
-      <option value="4">Level 4 - Implied Nudity</option>
-      <option value="5">Level 5 - Minimal Nudity</option>
-    </select>
-    <br />
-    <label for="filter-toggle">Enable Content Filter:</label>
-    <input type="checkbox" id="filter-toggle" />
-    <br />
-    <button id="save">Save Settings</button>
+    <div class="container" id="settings-container">
+      <div class="title">
+        <img src="logo2.png" alt="Logo" />
+        <h2>Sexual Content Image Filter</h2>
+      </div>
+      <label for="sensitivity">Sensitivity Level:</label>
+      <select id="sensitivity">
+        <option value="1">Level 1 - Explicit Nudity</option>
+        <option value="2">Level 2 - Full Nudity</option>
+        <option value="3">Level 3 - Partial Nudity</option>
+        <option value="4">Level 4 - Implied Nudity</option>
+        <option value="5">Level 5 - Minimal Nudity</option>
+      </select>
+      <br />
+      <br />
+      <label for="filter-toggle">Enable Image Filter:</label>
+      <label class="toggle-switch">
+        <input type="checkbox" id="filter-toggle" />
+        <span class="slider"></span>
+      </label>
+      <br />
+      <br />
+      <br />
+      <button class="button" id="save">Save Settings</button>
+      <br />
+      <br />
+      <a class="link" id="open-guide">How to use this filter</a>
+    </div>
+    <div class="container hidden" id="guide-container">
+      <h2>Guide to Using the Filter</h2>
+      <p>
+        This filter helps to identify and blur sexual content in images. The
+        sensitivity level determines the strictness of the filter. The filter
+        will filter out the preffered sensitivity level and all levels above it.
+      </p>
+      <table>
+        <tr>
+          <th>Level</th>
+          <th>Criteria</th>
+        </tr>
+        <tr>
+          <td><strong>1</strong></td>
+          <td>Explicit Nudity (men and women genitilia)</td>
+        </tr>
+        <tr>
+          <td><strong>2</strong></td>
+          <td>Full Nudity (men and women bust and bums)</td>
+        </tr>
+        <tr>
+          <td><strong> 3</strong></td>
+          <td>Partial Nudity (men and women in underwear)</td>
+        </tr>
+        <tr>
+          <td><strong>4</strong></td>
+          <td>Implied Nudity (shirtless men and short dressed women)</td>
+        </tr>
+        <tr>
+          <td><strong>5</strong></td>
+          <td>Minimal Nudity (all human subject/features)</td>
+        </tr>
+      </table>
+      <button class="button" id="go-back">Go Back</button>
+    </div>
     <script src="popup.js"></script>
   </body>
 </html>
